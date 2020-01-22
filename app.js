@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 3600000 * 24 * 365 }}));
 
 app.use('/backend/login', loginRouter);
 app.use('/backend/logout', logoutRouter);
