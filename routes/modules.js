@@ -9,7 +9,7 @@ router.get('/', function (req, res, next) {
         return;
     }
 
-    req.session.semesterFilter = req.query.semesterFilter ? JSON.parse(req.query.semesterFilter) : null;
+    req.session.semesterFilter = (req.query.semesterFilter && req.query.semesterFilter !== "null") ? JSON.parse(req.query.semesterFilter) : req.session.semesterFilter;
 
     if (!req.session.moduleData || !req.session.lastUpdate || moment().subtract(2, 'minutes').isSameOrAfter(req.session.lastUpdate)) {
         console.log("Updating");
