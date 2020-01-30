@@ -2,9 +2,9 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
-const session = require('cookie-session');
+const session = require('express-session');
 const cors = require('cors');
-
+const MySQLStore = require('connect-mysql')(session); // mysql session store
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const modulesRouter = require('./routes/modules');
@@ -21,10 +21,21 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
 app.use(session({
-    name: 'session',
-    secret: "keyboard cat",
-    // Cookie Options
-    maxAge: 24 * 60 * 60 * 1000 * 365 // 1 year
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: false,
+        secure: false,
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+    },
+    store: new MySQLStore({
+        config: {
+            user: 'user',
+            password: 'pw',
+            database: 'dualis_session'
+        }
+    }) // Change the express session store
 }));
 
 app.use('/backend/login', loginRouter);
