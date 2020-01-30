@@ -21,7 +21,7 @@ router.get('/', function (req, res, next) {
                 return;
             }
             req.session.moduleData = JSON.parse(body);
-            req.session.moduleData.data.cache = 0;
+            req.session.moduleData.data.cache = Math.round(moment.duration(moment().diff(req.session.lastUpdate)).asSeconds());
             req.session.moduleData.data.semesterFilter = req.session.semesterFilter;
             res.status(resp.statusCode).json(req.session.moduleData);
         });
