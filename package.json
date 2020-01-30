@@ -8,10 +8,10 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
+    "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
-    "express-session": "latest",
     "http-errors": "~1.6.3",
     "moment": "^2.24.0",
     "morgan": "~1.9.1",
