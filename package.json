@@ -16,7 +16,8 @@
     "moment": "^2.24.0",
     "morgan": "~1.9.1",
     "pug": "^2.0.4",
-    "request": "latest"
+    "request": "latest",
+    "xlsx": "^0.15.5"
   },
   "devDependencies": {
     "connect-mysql": "^2.2.5"

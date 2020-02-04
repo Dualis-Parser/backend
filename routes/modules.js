@@ -1,9 +1,11 @@
 const express = require('express');
 const request = require("request");
+const XLSX = require('xlsx');
+
 const router = express.Router();
 const moment = require('moment');
 
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     if (!(req.session.loggedIn && req.session.username && req.session.password)) {
         res.sendStatus(401);
         return;
@@ -30,6 +32,29 @@ router.get('/', function (req, res, next) {
         req.session.moduleData.data.semesterFilter = req.session.semesterFilter;
         res.json(req.session.moduleData);
     }
+});
+
+router.get('/export', (req, res) => {
+    if (!(req.session.loggedIn && req.session.username && req.session.password)) {
+        res.sendStatus(401);
+        return;
+    }
+
+    let modules = req.session.moduleData.data.modules.map(module => [module.module_no, module.module_name, "", parseInt(module.credits), module.final_grade]);
+    modules = modules.filter(m => !m[4].match(/(not set yet)|(noch nicht gesetzt)/)).sort((a, b) => a[0] > b [0] ? 1 : -1); // sort, same module number is not possible
+    modules = [["Modul", "Fach", "Studienjahr", "Credits", "Note"], ...modules];
+
+    const ws = XLSX.utils.aoa_to_sheet(modules);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Informatik");
+
+    /* generate buffer */
+    const buf = XLSX.write(wb, {type: 'buffer', bookType: "xlsx"});
+
+    /* send to client */
+    res.setHeader('Content-disposition', `attachment; filename=modules.xlsx`);
+    res.setHeader('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buf);
 });
 
 module.exports = router;
