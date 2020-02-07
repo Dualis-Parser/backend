@@ -14,15 +14,25 @@ router.get('/', function (req, res) {
     req.session.semesterFilter = (req.query.semesterFilter && req.query.semesterFilter !== "null") ? JSON.parse(req.query.semesterFilter) : req.session.semesterFilter;
 
     if (!req.session.moduleData || !req.session.lastUpdate || moment().subtract(2, 'minutes').isSameOrAfter(req.session.lastUpdate)) {
-        console.log("Updating");
         req.session.lastUpdate = moment();
 
-        request.get(`https://api.gahr.dev/dualis/user?username=${encodeURIComponent(req.session.username)}&password=${encodeURIComponent(req.session.password)}`, function (err, resp, body) {
+        const requestOptions = {
+            url: `https://api.gahr.dev/dualis/user/${encodeURIComponent(req.session.username)}`,
+            headers: {
+                "Private-Token": req.session.password
+            }
+        };
+        request.get(requestOptions, function (err, resp, body) {
             if (err) {
                 res.status(err.statusCode || 503).json({data: false});
                 return;
             }
             req.session.moduleData = JSON.parse(body);
+
+            if (!req.session.moduleData.data) {
+                res.sendStatus(500);
+                return;
+            }
             req.session.moduleData.data.cache = Math.round(moment.duration(moment().diff(req.session.lastUpdate)).asSeconds());
             req.session.moduleData.data.semesterFilter = req.session.semesterFilter;
             res.status(resp.statusCode).json(req.session.moduleData);

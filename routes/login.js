@@ -5,10 +5,15 @@ const request = require('request');
 router.post('/', function (req, res, next) {
     if (req.session.loggedIn && req.session.username && req.session.password) {
         res.status(200).json({data: true});
-        console.log("already auth");
         return;
     }
-    request.get(`https://api.gahr.dev/dualis/user/validate?username=${encodeURIComponent(req.body.username)}&password=${encodeURIComponent(req.body.password)}`, function (err, resp, body) {
+    const requestOptions = {
+        url: `https://api.gahr.dev/dualis/user/validate/${encodeURIComponent(req.body.username)}`,
+        headers: {
+            "Private-Token": req.body.password
+        }
+    };
+    request.get(requestOptions, function (err, resp, body) {
         if (err) {
             res.status(503).json({data: false});
             return;
