@@ -34,8 +34,8 @@ docker-build:
 deploy-release:
   stage: deploy
   script:
-    - docker rm -f "$CI_REGISTRY_IMAGE" || true
     - docker pull "$CI_REGISTRY/$CI_REGISTRY_IMAGE:latest"
+    - docker rm -f "$CI_REGISTRY_IMAGE" || true
     - docker run -d --name $CI_REGISTRY_IMAGE -p $DEPLOY_PORT:$DEPLOY_PORT --restart unless-stopped "$CI_REGISTRY/$CI_REGISTRY_IMAGE"
   only:
     - master # only deploy a real release
