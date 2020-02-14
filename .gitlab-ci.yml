@@ -7,8 +7,8 @@ docker-build-master:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker build --pull -t "$CI_REGISTRY/$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY/$CI_REGISTRY_IMAGE"
   only:
     - master
   tags:
@@ -24,10 +24,22 @@ docker-build:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker build --pull -t "$CI_REGISTRY/$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY/$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" 
   except:
     - master
   tags:
     - docker
     - dualis
+    
+deploy-release:
+  stage: deploy
+  script:
+    - docker rm -f "$CI_REGISTRY_IMAGE" || true
+    - docker pull "$CI_REGISTRY/$CI_REGISTRY_IMAGE:latest"
+    - docker run -d --name $CI_REGISTRY_IMAGE -p $DEPLOY_PORT:$DEPLOY_PORT --restart unless-stopped "$CI_REGISTRY/$CI_REGISTRY_IMAGE"
+  only:
+    - master # only deploy a real release
+  tags:
+    - dualis
+    - shell
