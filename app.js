@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const session = require('express-session');
 const cors = require('cors');
-const MySQLStore = require('connect-mysql')(session); // mysql session store
+const MySQLStore = require('express-mysql-session')(session); // mysql session store
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const modulesRouter = require('./routes/modules');
@@ -30,11 +30,10 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 365,
     },
     store: new MySQLStore({
-        config: {
-            user: 'user',
-            password: 'pw',
-            database: 'dualis_session'
-        }
+        host: 'drrago.de',
+        user: 'dualis',
+        password: 'NqsOXy7P6Wtuwew1',
+        database: 'dualis'
     }) // Change the express session store
 }));
 
