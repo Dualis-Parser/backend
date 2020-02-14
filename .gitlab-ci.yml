@@ -9,6 +9,9 @@ docker-build-master:
     - docker push "$CI_REGISTRY_IMAGE"
   only:
     - master
+  tags:
+    - docker
+    - dualis
 
 docker-build:
   # Official docker image.
@@ -23,3 +26,6 @@ docker-build:
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   except:
     - master
+  tags:
+    - docker
+    - dualis
