@@ -31,9 +31,9 @@ app.use(session({
     },
     store: new MySQLStore({
         host: process.env.DATABASE_HOST,
-        user: 'dualis',
-        password: 'NqsOXy7P6Wtuwew1',
-        database: 'dualis'
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME
     }) // Change the express session store
 }));
 
