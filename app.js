@@ -30,7 +30,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 365,
     },
     store: new MySQLStore({
-        host: 'drrago.de',
+        host: process.env.DATABASE_HOST,
         user: 'dualis',
         password: 'NqsOXy7P6Wtuwew1',
         database: 'dualis'
