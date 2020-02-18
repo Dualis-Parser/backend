@@ -36,7 +36,7 @@ router.get('/', function (req, res) {
     }
 
 
-    if (!req.session.moduleData || !req.session.lastUpdate || moment().subtract(2, 'minutes').isSameOrAfter(req.session.lastUpdate)) {
+    if (!req.session.moduleData || !req.session.moduleData.data || !req.session.lastUpdate || moment().subtract(2, 'minutes').isSameOrAfter(req.session.lastUpdate)) {
         req.session.lastUpdate = moment();
 
         const requestOptions = {
