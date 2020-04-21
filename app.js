@@ -28,6 +28,7 @@ app.use(session({
         httpOnly: false,
         secure: false,
         maxAge: 1000 * 60 * 60 * 24 * 365,
+        sameSite: true
     },
     store: new MySQLStore({
         host: process.env.DATABASE_HOST,

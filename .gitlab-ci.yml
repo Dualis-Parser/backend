@@ -30,15 +30,3 @@ docker-build:
   tags:
     - docker
     - dualis
-    
-deploy-release:
-  stage: deploy
-  script:
-    - cd /opt/services/dualis
-    - docker-compose pull $COMPOSE_SERVICE_NAME
-    - docker-compose restart $COMPOSE_SERVICE_NAME
-  only:
-    - master # only deploy a real release
-  tags:
-    - dualis
-    - shell
