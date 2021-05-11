@@ -7,6 +7,10 @@ router.post('/', function (req, res, next) {
         res.status(200).json({data: true});
         return;
     }
+    if (!req.body.username || !req.body.password) {
+        res.status(401).json({data: false});
+        return;
+    }
     const requestOptions = {
         url: `https://api.gahr.dev/dualis/user/validate/${encodeURIComponent(req.body.username)}`,
         headers: {
